@@ -1,3 +1,5 @@
-requests
-python-dotenv
-py3cw
+# 3Commas Trading Bot Dependencies
+requests>=2.28.0
+python-dotenv>=0.20.0
+py3cw>=0.0.36
+asyncio>=3.4.3

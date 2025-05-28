@@ -1,4 +1,3 @@
-# filepath: c:\Users\USER\Desktop\New folder\dca_bot.py
 import time
 from three_commas_client import ThreeCommasClient
 from config import DCA_BOT_CONFIG, DEFAULT_EXCHANGE
@@ -21,24 +20,17 @@ class DCABot:
         """Find and set account ID if not provided"""
         if not self.account_id:
             accounts = self.client.get_accounts()
-            
-            if not accounts or len(accounts) == 0:
-                raise Exception("No exchange accounts found in your 3Commas account. Please connect an exchange in 3Commas first.")
-                
             # Find account with the specified exchange
             for account in accounts:
                 if account['market_code'].lower() == DEFAULT_EXCHANGE.lower():
                     self.account_id = account['id']
                     break
-                    
-            # If specified exchange not found but accounts exist, use the first available account
             if not self.account_id and accounts:
+                # If no account found for DEFAULT_EXCHANGE but accounts exist, use the first one
                 self.account_id = accounts[0]['id']
-                print(f"Warning: Exchange {DEFAULT_EXCHANGE} not found. Using {accounts[0]['market_code']} instead.")
-                return
-                
+                print(f"No account found for exchange {DEFAULT_EXCHANGE}, using account: {accounts[0]['name']}")
             if not self.account_id:
-                raise Exception(f"No account found for exchange {DEFAULT_EXCHANGE}. Available exchanges: {', '.join([a['market_code'] for a in accounts])}")
+                raise Exception(f"No account found for exchange {DEFAULT_EXCHANGE}")
     
     async def create_bot(self):
         """Create and start the DCA Bot"""
@@ -47,10 +39,18 @@ class DCABot:
         
         print(f"Creating DCA Bot with config: {self.config}")
         
-        bot = self.client.create_dca_bot(self.account_id, self.config)
-        print(f"DCA Bot created: {bot.get('id')}")
-        
-        return bot
+        try:
+            bot = self.client.create_dca_bot(self.account_id, self.config)
+            print(f"DCA Bot created: {bot.get('id')}")
+            return bot
+        except Exception as e:
+            print(f"Error creating DCA Bot: {str(e)}")
+            print("Troubleshooting suggestions:")
+            print("1. Check if your API key has trading permissions")
+            print("2. Verify you have sufficient funds in your account")
+            print("3. Ensure your trading pair is correctly formatted")
+            print("4. Try adjusting safety order parameters to match exchange requirements")
+            raise
     
     async def start_bot(self, bot_id):
         """Start the DCA Bot"""
@@ -63,3 +63,8 @@ class DCABot:
         result = self.client.stop_bot(bot_id)
         print(f"DCA Bot stopped: {result}")
         return result
+    
+    async def get_deals(self, bot_id):
+        """Get deals for the DCA Bot"""
+        deals = self.client.get_bot_deals(bot_id)
+        return deals
