@@ -25,6 +25,10 @@ class GridBot:
                 if account['market_code'].lower() == DEFAULT_EXCHANGE.lower():
                     self.account_id = account['id']
                     break
+            if not self.account_id and accounts:
+                # If no account found for DEFAULT_EXCHANGE but accounts exist, use the first one
+                self.account_id = accounts[0]['id']
+                print(f"No account found for exchange {DEFAULT_EXCHANGE}, using account: {accounts[0]['name']}")
             if not self.account_id:
                 raise Exception(f"No account found for exchange {DEFAULT_EXCHANGE}")
     

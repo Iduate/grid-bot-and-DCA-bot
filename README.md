@@ -9,7 +9,12 @@ This project implements Grid and DCA (Dollar-Cost Averaging) trading bots using 
    pip install -r requirements.txt
    ```
 
-2. Configure the bots:
+2. Connect an exchange to 3Commas:
+   - Log in to your 3Commas account
+   - Go to "My Exchanges" and click "Connect Exchange"
+   - Follow the instructions to connect your preferred exchange
+
+3. Configure the bots:
    - Edit the `.env` file with your 3Commas API credentials
    - Adjust bot settings in `config.py`
 

@@ -27,6 +27,15 @@ async def main():
         accounts = client.get_accounts()
         print(f"Available accounts: {len(accounts)}")
         
+        if len(accounts) == 0:
+            print("\n⚠️ No exchange accounts connected to 3Commas!")
+            print("Please follow these steps:")
+            print("1. Log in to your 3Commas account")
+            print("2. Go to 'My Exchanges' in the left sidebar")
+            print("3. Click 'Connect Exchange' and follow the instructions")
+            print("4. Come back and run this script again\n")
+            return
+        
         for account in accounts:
             print(f"Account: {account['name']} ({account['market_code']}), ID: {account['id']}")
         

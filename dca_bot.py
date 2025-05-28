@@ -1,3 +1,4 @@
+# filepath: c:\Users\USER\Desktop\New folder\dca_bot.py
 import time
 from three_commas_client import ThreeCommasClient
 from config import DCA_BOT_CONFIG, DEFAULT_EXCHANGE
@@ -20,13 +21,24 @@ class DCABot:
         """Find and set account ID if not provided"""
         if not self.account_id:
             accounts = self.client.get_accounts()
+            
+            if not accounts or len(accounts) == 0:
+                raise Exception("No exchange accounts found in your 3Commas account. Please connect an exchange in 3Commas first.")
+                
             # Find account with the specified exchange
             for account in accounts:
                 if account['market_code'].lower() == DEFAULT_EXCHANGE.lower():
                     self.account_id = account['id']
                     break
+                    
+            # If specified exchange not found but accounts exist, use the first available account
+            if not self.account_id and accounts:
+                self.account_id = accounts[0]['id']
+                print(f"Warning: Exchange {DEFAULT_EXCHANGE} not found. Using {accounts[0]['market_code']} instead.")
+                return
+                
             if not self.account_id:
-                raise Exception(f"No account found for exchange {DEFAULT_EXCHANGE}")
+                raise Exception(f"No account found for exchange {DEFAULT_EXCHANGE}. Available exchanges: {', '.join([a['market_code'] for a in accounts])}")
     
     async def create_bot(self):
         """Create and start the DCA Bot"""

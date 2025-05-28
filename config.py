@@ -10,7 +10,7 @@ API_KEY = os.getenv('3COMMAS_API_KEY')
 API_SECRET = os.getenv('3COMMAS_SECRET')
 
 # Bot configuration
-DEFAULT_EXCHANGE = 'binance'  # Change this to your preferred exchange
+DEFAULT_EXCHANGE = 'binance'  # Change this to your preferred exchange (e.g., 'kucoin', 'ftx', 'bybit')
 DEFAULT_MARKET_CODE = 'BTC_USDT'  # Default trading pair
 
 # Grid Bot configuration
